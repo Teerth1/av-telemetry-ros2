@@ -1,0 +1,10 @@
+services:
+  bmw_telemetry:
+    build: .
+    volumes:
+      # Map the current Windows directory (.) to /ros2_ws in the container
+      # This allows you to edit code on Windows and it updates inside Docker instantly.
+      - .:/ros2_ws
+    stdin_open: true # Equivalent to -i
+    tty: true # Equivalent to -t
+    command: bash -c "source /opt/ros/humble/setup.sh && colcon build && source install/setup.bash && bash"
