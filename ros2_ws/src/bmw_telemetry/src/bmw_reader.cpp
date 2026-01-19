@@ -1,5 +1,6 @@
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/float32.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 #include <linux/can.h>
 #include <linux/can/raw.h>
 #include <sys/socket.h>
@@ -29,10 +30,9 @@ public:
         use_sim_ = this->get_parameter("use_sim").as_bool(); // Saved to member variable!
 
         if (use_sim_) {
-            RCLCPP_INFO(this->get_logger(), "🚀 Running in SIMULATION mode (Isaac Sim Bridge)");
-            // FIX 1: Start the timer in Sim mode too!
-            timer_ = this->create_wall_timer(
-                std::chrono::milliseconds(100), std::bind(&BmwTelemetryNode::readCanFrame, this));
+            RCLCPP_INFO(this->get_logger(), "🚀 Running in SIMULATION mode (Gazebo)");
+            odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
+                "/odom", 10, std::bind(&BmwTelemetryNode::odomCallback, this, std::placeholders::_1));
         }
         else {
             if (initSocket(interface.c_str())) {
@@ -56,7 +56,7 @@ private:
     rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr speed_pub_;
     rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr steering_pub_;
     rclcpp::TimerBase::SharedPtr timer_;
-
+    rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
     bool initSocket(const char *ifname)
     {
         struct sockaddr_can addr;
@@ -131,6 +131,23 @@ private:
         msg.data = angle;
         steering_pub_->publish(msg);
     }
+    
+    void odomCallback(const nav_msgs::msg::Odometry::SharedPtr msg) {
+        // 1. Get Linear Speed (m/s) -> Convert to km/h
+        float speed_mps = msg->twist.twist.linear.x;
+        float speed_kmh = speed_mps * 3.6f;
+        
+        // 2. Fake RPM based on speed (just for visualization)
+        float rpm = speed_kmh * 40.0f; 
+        // 3. Get Steering (Yaw Rate) -> Simple fake calibration
+        float steering_rad = msg->twist.twist.angular.z;
+        float steering_deg = steering_rad * (180.0f / 3.14159f) * 10.0f; // Scale factor
+        // Publish to our dashboard topics
+        publishSpeed(speed_kmh);
+        publishRpm(rpm);
+        publishSteering(steering_deg);
+}
+    
 };
 
 int main(int argc, char **argv)

@@ -6,7 +6,14 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Add this line to install OpenCV
-RUN apt-get update && apt-get install -y libopencv-dev python3-opencv
+# Add this line to install OpenCV and Gazebo Simulation
+RUN apt-get update && apt-get install -y \
+    libopencv-dev \
+    python3-opencv \
+    ros-humble-gazebo-ros-pkgs \
+    ros-humble-cv-bridge \
+    ros-humble-image-transport \
+    ros-humble-xacro
 
 # 2. Set up the workspace directory inside the container
 WORKDIR /ros2_ws

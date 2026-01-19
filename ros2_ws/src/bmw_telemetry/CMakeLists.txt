@@ -14,19 +14,30 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(gazebo_ros REQUIRED)
+find_package(cv_bridge REQUIRED)
+
 
 # 1. BMW CAN Reader Node
 add_executable(bmw_reader src/bmw_reader.cpp)
-ament_target_dependencies(bmw_reader rclcpp std_msgs)
+ament_target_dependencies(bmw_reader rclcpp std_msgs nav_msgs geometry_msgs)
 
 # 2. Lane Detector Node (OpenCV)
 add_executable(lane_detector src/lane_detector_node.cpp)
-ament_target_dependencies(lane_detector rclcpp std_msgs)
+ament_target_dependencies(lane_detector rclcpp std_msgs sensor_msgs cv_bridge)
 target_link_libraries(lane_detector ${OpenCV_LIBS})
 
 # 3. Sensor Fusion Node
 add_executable(fusion_node src/fusion_node.cpp)
 ament_target_dependencies(fusion_node rclcpp std_msgs)
+
+
+
+
+
 
 # Install targets
 install(TARGETS 
@@ -36,7 +47,7 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME})
 
 # Install launch files
-install(DIRECTORY launch
+install(DIRECTORY launch urdf
   DESTINATION share/${PROJECT_NAME})
 
 ament_package()
