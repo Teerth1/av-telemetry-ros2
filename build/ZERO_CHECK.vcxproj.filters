@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\teert\Downloads\autonomous-telemetry-core\build\CMakeFiles\d6e93930c7f0da3e1865adf614675458\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{445C00AC-5A73-324F-8D0C-4AC3BFE10AF2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

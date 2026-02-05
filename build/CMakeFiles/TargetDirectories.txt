@@ -1,0 +1,3 @@
+C:/Users/teert/Downloads/autonomous-telemetry-core/build/CMakeFiles/telemetry_decoder.dir
+C:/Users/teert/Downloads/autonomous-telemetry-core/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/teert/Downloads/autonomous-telemetry-core/build/CMakeFiles/ZERO_CHECK.dir
